@@ -74,6 +74,7 @@ def main():
         if st.button("Place Bet"):
             st.session_state.current_bet = bet
             st.session_state.balance -= bet
+            st.experimental_rerun()  # Force rerun after placing a bet
 
     # Display player and dealer hands
     st.subheader("Your Hand")
@@ -97,8 +98,10 @@ def main():
                 if calculate_hand_value(st.session_state.player_hand) > 21:
                     st.session_state.game_over = True
                     st.warning("You busted! Dealer wins.")
+                st.experimental_rerun()  # Force rerun after hitting
             if st.button("Stand"):
                 st.session_state.player_stands = True
+                st.experimental_rerun()  # Force rerun after standing
 
             # Split Option
             if len(st.session_state.player_hand) == 2 and st.session_state.player_hand[0] == st.session_state.player_hand[1]:
@@ -111,6 +114,7 @@ def main():
                         for card in hand:
                             update_card_count(card)
                     st.session_state.player_hand = st.session_state.split_hands[0]
+                    st.experimental_rerun()  # Force rerun after splitting
 
             # Double Down Option
             if len(st.session_state.player_hand) == 2 and not st.session_state.doubled_down:
@@ -122,6 +126,7 @@ def main():
                     update_card_count(new_card)
                     st.session_state.doubled_down = True
                     st.session_state.player_stands = True
+                    st.experimental_rerun()  # Force rerun after doubling down
 
         # Dealer's turn
         if st.session_state.player_stands:
@@ -144,6 +149,7 @@ def main():
                 st.info("It's a tie!")
                 st.session_state.balance += st.session_state.current_bet  # Return the bet in case of a tie
             st.session_state.game_over = True
+            st.experimental_rerun()  # Force rerun after dealer's turn ends
 
     # Insurance Option
     if st.session_state.dealer_hand[0] == 'A' and not st.session_state.player_stands and st.session_state.current_bet > 0:
@@ -155,6 +161,7 @@ def main():
                 st.session_state.balance += insurance_bet * 3
             else:
                 st.warning("Dealer does not have Blackjack. You lose the insurance bet.")
+            st.experimental_rerun()  # Force rerun after insurance action
 
     # Display balance
     st.subheader("Your Balance")
@@ -182,6 +189,7 @@ def main():
             st.session_state.doubled_down = False
             st.session_state.card_count = 0
             st.session_state.initial_card_count_updated = False
+            st.experimental_rerun()  # Force rerun after restarting the game
 
 if __name__ == "__main__":
     main()
